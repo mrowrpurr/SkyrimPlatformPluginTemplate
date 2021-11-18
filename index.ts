@@ -1,3 +1,3 @@
-import * as plugin from './src/plugin';
+import Plugin from './src/Plugin'
 
-plugin.main();
+Plugin()

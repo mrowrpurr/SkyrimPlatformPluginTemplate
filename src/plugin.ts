@@ -1,10 +1,3 @@
-import {
-    once,
-    printConsole
-} from "skyrimPlatform"
-
-export let main = () => {
-    once("update", () => {
-        printConsole("Hello from plugin!")
-    });
-};
+export default function Main() {
+    return "Hello"
+}
