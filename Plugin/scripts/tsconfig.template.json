@@ -5,10 +5,7 @@
         "noImplicitThis": true,
         "strict": true,
         "module": "System",
-        "target": "ES5",
-        "lib": [
-            "ES2015"
-        ],
+        "target": "ES6",
         "moduleResolution": "node"
     },
     "include": [
