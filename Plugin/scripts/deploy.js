@@ -1,1 +1,1 @@
-require('project').deployProject()
+require('./project').deployProject()

@@ -3,13 +3,17 @@ const path = require('path')
 const { stringify } = require('querystring')
 
 let config = {}
-let projectType = ""
 const configFileName = "skyrimplatform.config.json"
 const configFilePath = path.join('.', configFileName)
 const exampleConfigFileName = "example-skyrimplatform.config.json"
 const exampleConfigFilePath = path.join('.', exampleConfigFileName)
 const typeScriptConfigTemplateName = 'tsconfig.template.json'
 const typeScriptConfigTemplatePath = path.join('scripts', typeScriptConfigTemplateName)
+
+function logInfo(message) {
+    console.log(`[Skyrim Platform] ${message}`)
+    return false
+}
 
 function logError(message) {
     console.error(`[Skyrim Platform] ${message}`)
@@ -87,16 +91,20 @@ function deployProject() {
     if (!validateConfig()) return
 
     const glob = require('glob')
-    const deployFolder = config[pluginType].deployFolder
-    const sourceFileGlobs = config[pluginType].sourceFiles
+    const deployFolder = config[config.type].deployFolder
+    const sourceFileGlobs = config[config.type].sourceFiles
+    const ignorePrefix = config[config.type].ignorePrefix
     sourceFileGlobs.forEach(pathMatcher => {
-        const fileNames = glob.sync(path.join('..', pathMatcher))
+        const fileNames = glob.sync(pathMatcher)
         fileNames.forEach(filename => {
-            const fullFileDeployPath = path.join(deployFolder, filename)
+            let filepath = filename
+            if (ignorePrefix) filepath = filepath.replace(ignorePrefix, '')
+            const fullFileDeployPath = path.join(deployFolder, filepath)
             const fullFileDirectoryPath = path.dirname(fullFileDeployPath)
             if (!fs.existsSync(fullFileDeployPath)) {
                 fs.mkdirSync(fullFileDirectoryPath, { recursive: true })
-                fs.copyFile(filename, fullFileDeployPath)
+                fs.copyFileSync(filename, fullFileDeployPath)
+                logInfo(`Wrote ${fullFileDeployPath}`)
             }
         })
     })
@@ -104,6 +112,5 @@ function deployProject() {
 
 exports.validateConfig = validateConfig
 exports.readConfiguration = readConfiguration
-exports.projectType = projectType
 exports.setupTypeScriptConfiguration = setupTypeScriptConfiguration
 exports.deployProject = deployProject
