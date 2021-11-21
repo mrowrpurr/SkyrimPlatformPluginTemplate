@@ -101,11 +101,9 @@ function deployProject() {
             if (ignorePrefix) filepath = filepath.replace(ignorePrefix, '')
             const fullFileDeployPath = path.join(deployFolder, filepath)
             const fullFileDirectoryPath = path.dirname(fullFileDeployPath)
-            if (!fs.existsSync(fullFileDeployPath)) {
-                fs.mkdirSync(fullFileDirectoryPath, { recursive: true })
-                fs.copyFileSync(filename, fullFileDeployPath)
-                logInfo(`Wrote ${fullFileDeployPath}`)
-            }
+            if (!fs.existsSync(fullFileDirectoryPath)) fs.mkdirSync(fullFileDirectoryPath, { recursive: true })
+            fs.copyFileSync(filename, fullFileDeployPath)
+            logInfo(`Wrote ${fullFileDeployPath}`)
         })
     })
 }
